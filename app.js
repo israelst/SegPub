@@ -4,6 +4,7 @@ var fs = require('fs'),
     express = require('express'),
     compression = require('compression'),
     app = express(),
+    parseDate = require('./util').parseDate,
     filter  = require('./filter'),
     summary = require('./summary').summary,
     csvFile = path.join('static', 'data', 'segpub.csv'),
@@ -27,11 +28,6 @@ file.pipe(parser)
     .resume();
 
 app.use(compression());
-
-function parseDate(dateString){
-    var split = dateString.split('/');
-    return new Date(split.reverse().join('-'));
-}
 
 function validatePreconditions(req, res, next){
     if(!req.query.finalKind){
