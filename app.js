@@ -43,18 +43,7 @@ app.get('/incidents', validatePreconditions, function(req, res){
     res.set('Content-Type', 'text/csv');
     csv.stringify(
         incidents.filter(filter.filterByKind(finalKind))
-                 .filter(function(incident){
-                     // TODO: Refactoring and test covering are needed.
-                     var date = parseDate(incident['Inicio Atendimento'].slice(0, 10)),
-                         show = true;
-                     if(req.query.from){
-                         show = show && date >= new Date(req.query.from);
-                     }
-                     if(req.query.to){
-                         show = show && date <= new Date(req.query.to);
-                     }
-                     return show;
-                 }),
+                 .filter(filter.filterByDate(req.query.from, req.query.to)),
         {delimiter: '|', header: true})
     .pipe(res);
 });

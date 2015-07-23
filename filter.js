@@ -1,3 +1,5 @@
+var parseDate = require('./util').parseDate;
+
 exports.selector = function(){
     var keys = [].slice.call(arguments);
     return function(record){
@@ -25,3 +27,17 @@ exports.filterByCategory = function(value){
     return filterBy('Categoria', value);
 };
 
+exports.filterByDate = function(from, to){
+    return function(incident){
+        // TODO: Refactoring and test covering are needed.
+        var date = parseDate(incident['Inicio Atendimento'].slice(0, 10)),
+        show = true;
+        if(from){
+            show = show && date >= new Date(from);
+        }
+        if(to){
+            show = show && date <= new Date(to);
+        }
+        return show;
+    };
+}
