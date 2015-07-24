@@ -184,3 +184,30 @@ describe('filterByCategory', function(){
         });
     });
 });
+
+describe('filterByDate', function(){
+    var fixture, parser;
+    beforeEach(function(){
+        parser = csv.parse({delimiter: '|', columns: true});
+        fixture = require('fs').createReadStream('test/fixture.csv');
+    });
+    context('data with one incident at 2012-11-01', function(){
+        var records;
+        beforeEach(function(done){
+            byDate = filter.filterByDate(new Date("2012-11-01"), new Date("2012-11-01"));
+            fixture.pipe(parser)
+                .pipe(csv.transform(byDate, function(err, output){
+                    records = output;
+                    assert.equal(err, null);
+                    done();
+                }));
+        });
+        it('should return 1 records', function(){
+            assert.equal(records.length, 1);
+        });
+        it('should return the matched records', function(){
+            var idAndDate = records.map(filter.selector('Protocolo', 'Inicio Atendimento'));
+            assert.deepEqual(idAndDate, [["111201200046", "01/11/2012 00:03:26"]]);
+        });
+    });
+});
