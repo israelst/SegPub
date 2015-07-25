@@ -38,6 +38,8 @@ exports.filterByDate = function(from, to){
         if(to){
             show = show && date <= new Date(to);
         }
-        return show;
+        if(show){
+            return incident;
+        }
     };
 }
