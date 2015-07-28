@@ -244,4 +244,30 @@ describe('filterByDate', function(){
             ]);
         });
     });
+    context('data with five incident after 2012-11-30', function(){
+        var records;
+        beforeEach(function(done){
+            var from = new Date("2012-11-29"),
+                byDate = filter.filterByDate(from);
+            fixture.pipe(parser)
+                .pipe(csv.transform(byDate, function(err, output){
+                    records = output;
+                    assert.equal(err, null);
+                    done();
+                }));
+        });
+        it('should return 5 records', function(){
+            assert.equal(records.length, 5);
+        });
+        it('should return the matched records', function(){
+            var idAndDate = records.map(filter.selector('Protocolo', 'Inicio Atendimento'));
+            assert.deepEqual(idAndDate, [
+                ["3011201215053", "30/11/2012 18:05:01"],
+                ["2911201215011", "29/11/2012 18:04:25"],
+                ["3011201214641", "30/11/2012 17:46:40"],
+                ["3011201218420", "30/11/2012 20:27:56"],
+                ["2911201214451", "29/11/2012 17:39:56"]
+            ]);
+        });
+    });
 });
