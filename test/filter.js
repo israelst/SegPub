@@ -212,4 +212,36 @@ describe('filterByDate', function(){
             assert.deepEqual(idAndDate, [["111201200046", "01/11/2012 00:03:26"]]);
         });
     });
+    context('data with one incident between 2012-11-26 and 2012-11-28', function(){
+        var records;
+        beforeEach(function(done){
+            var from = new Date("2012-11-26"),
+                to = new Date("2012-11-28"),
+                byDate = filter.filterByDate(from, to);
+            fixture.pipe(parser)
+                .pipe(csv.transform(byDate, function(err, output){
+                    records = output;
+                    assert.equal(err, null);
+                    done();
+                }));
+        });
+        it('should return 10 records', function(){
+            assert.equal(records.length, 10);
+        });
+        it('should return the matched records', function(){
+            var idAndDate = records.map(filter.selector('Protocolo', 'Inicio Atendimento'));
+            assert.deepEqual(idAndDate, [
+                 ["2811201207082", "28/11/2012 12:16:57"],
+                 ["2611201203668", "26/11/2012 08:53:37"],
+                 ["2811201208283", "28/11/2012 13:17:32"],
+                 ["2711201218509", "27/11/2012 21:55:30"],
+                 ["2811201220897", "28/11/2012 23:55:50"],
+                 ["2611201204301", "26/11/2012 09:35:46"],
+                 ["2711201213267", "27/11/2012 17:41:40"],
+                 ["2711201219042", "27/11/2012 22:26:22"],
+                 ["2811201202073", "28/11/2012 06:56:15"],
+                 ["2711201210463", "27/11/2012 15:16:56"],
+            ]);
+        });
+    });
 });
