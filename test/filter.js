@@ -95,7 +95,7 @@ describe('filterByKind', function(){
     context('data with two "Ameaça", but only one as a final kind', function(){
         var records;
         beforeEach(function(done){
-            byKind = filter.filterByKind('Ameaça');
+            var byKind = filter.filterByKind('Ameaça');
             fixture.pipe(parser)
                 .pipe(csv.transform(byKind, function(err, output){
                     records = output;
@@ -121,7 +121,7 @@ describe('filterByCategory', function(){
     context('data with 3 "DESISTÊNCIA"', function(){
         var records;
         beforeEach(function(done){
-            byCategory = filter.filterByCategory('DESISTÊNCIA');
+            var byCategory = filter.filterByCategory('DESISTÊNCIA');
             fixture.pipe(parser)
                 .pipe(csv.transform(byCategory, function(err, output){
                     records = output;
@@ -143,7 +143,7 @@ describe('filterByCategory', function(){
     context('data with 15 "OCORRÊNCIA"', function(){
         var records;
         beforeEach(function(done){
-            byCategory = filter.filterByCategory('OCORRÊNCIA');
+            var byCategory = filter.filterByCategory('OCORRÊNCIA');
             fixture.pipe(parser)
                 .pipe(csv.transform(byCategory, function(err, output){
                     records = output;
@@ -194,7 +194,9 @@ describe('filterByDate', function(){
     context('data with one incident at 2012-11-01', function(){
         var records;
         beforeEach(function(done){
-            byDate = filter.filterByDate(new Date("2012-11-01"), new Date("2012-11-01"));
+            var from = new Date("2012-11-01"),
+                to = new Date("2012-11-01"),
+                byDate = filter.filterByDate(from, to);
             fixture.pipe(parser)
                 .pipe(csv.transform(byDate, function(err, output){
                     records = output;
