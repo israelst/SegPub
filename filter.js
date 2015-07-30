@@ -29,7 +29,6 @@ exports.filterByCategory = function(value){
 
 exports.filterByDate = function(from, to){
     return function(incident){
-        // TODO: Refactoring and test covering are needed.
         var date = parseDate(incident['Inicio Atendimento'].slice(0, 10)),
         show = true;
         if(from){
