@@ -7,6 +7,7 @@ var fs = require('fs'),
     parseDate = require('./util').parseDate,
     filter  = require('./filter'),
     summary = require('./summary').summary,
+    summarizeBy = require('./summary').summarizeBy,
     csvFile = path.join('static', 'data', 'segpub.csv'),
     incidents = [],
     storeData = csv.transform([].push.bind(incidents));
@@ -48,9 +49,16 @@ app.get('/incidents', validatePreconditions, function(req, res){
     .pipe(res);
 });
 
-app.get('/incidents/summary', summary(incidents, function(incident){
-    return incident['Descrição Natureza Final'];
-}));
+app.get('/incidents/summary', function(req, res){
+    function key(incident){
+        return incident['Descrição Natureza Final'];
+    }
+    res.json(
+        incidents
+            .filter(filter.filterByDate(req.query.from, req.query.to))
+            .reduce(summarizeBy(key), {})
+    );
+});
 
 app.get('/incidents/summary/date', summary(incidents, function(incident){
     var date = parseDate(incident['Inicio Atendimento'].slice(0, 10));

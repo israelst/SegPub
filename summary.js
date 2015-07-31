@@ -6,10 +6,10 @@ function summarizeBy(key){
         return summary;
     };
 }
+exports.summarizeBy = summarizeBy;
 
 exports.summary = function (data, cb){
     return function (req, res, next){
         res.json(data.reduce(summarizeBy(cb), {}));
     };
 };
-
