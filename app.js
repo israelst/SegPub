@@ -39,25 +39,31 @@ function validatePreconditions(req, res, next){
 }
 
 app.get('/incidents', validatePreconditions, function(req, res){
-    var finalKind = req.query.finalKind;
+    var finalKind = req.query.finalKind,
+        from = req.query.from,
+        to = req.query.to;
 
     res.set('Content-Type', 'text/csv');
     csv.stringify(
         incidents.filter(filter.filterByKind(finalKind))
-                 .filter(filter.filterByDate(req.query.from, req.query.to)),
+                 .filter(filter.filterByDate(from, to)),
         {delimiter: '|', header: true})
     .pipe(res);
 });
 
 app.get('/incidents/summary', function(req, res){
+    var from = req.query.from,
+        to = req.query.to,
+        summary;
+
     function key(incident){
         return incident['Descrição Natureza Final'];
     }
-    res.json(
-        incidents
-            .filter(filter.filterByDate(req.query.from, req.query.to))
-            .reduce(summarizeBy(key), {})
-    );
+
+    summary = incidents
+        .filter(filter.filterByDate(from, to))
+        .reduce(summarizeBy(key), {});
+    res.json(summary);
 });
 
 app.get('/incidents/summary/date', summary(incidents, function(incident){
