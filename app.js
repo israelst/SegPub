@@ -6,7 +6,6 @@ var fs = require('fs'),
     app = express(),
     parseDate = require('./util').parseDate,
     filter  = require('./filter'),
-    summary = require('./summary').summary,
     summarizeBy = require('./summary').summarizeBy,
     csvFile = path.join('static', 'data', 'segpub.csv'),
     incidents = [],
@@ -66,9 +65,12 @@ app.get('/incidents/summary', function(req, res){
     res.json(summary);
 });
 
-app.get('/incidents/summary/date', summary(incidents, function(incident){
-    var date = parseDate(incident['Inicio Atendimento'].slice(0, 10));
-    return date.toISOString().slice(0, 10);
-}));
+app.get('/incidents/summary/date', function(req, res){
+    function date(incident){
+        var ISOdate = parseDate(incident['Inicio Atendimento'].slice(0, 10));
+        return ISOdate;
+    }
+    res.json(incidents.reduce(summarizeBy(date), {}));
+});
 
 exports.app = app;
