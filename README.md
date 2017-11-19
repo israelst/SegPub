@@ -14,6 +14,8 @@ The idea is to build these three interactive histograms that cross filter each o
 
 After select one category, the map and the other two histograms are refreshed showing the spatial, daily and hourly distribution of the selected category incidents. Similarly, after select a slice of the month or of the day, the whole visualization is refreshed.
 
+![Screenshot](doc/screenshot.png)
+
 # Known bugs and limitations.
 * For while, there are only two histograms (category and daily distribution) and they are only filtering the map.
 * There are some `undefined` values at some incidents details.
